@@ -6,25 +6,50 @@
  * User Manual available at https://docs.gradle.org/7.2/userguide/building_java_projects.html
  */
 
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
+    id("com.github.johnrengelman.shadow") version "7.0.0"
+
 }
 
 repositories {
-    // Use Maven Central for resolving dependencies.
     mavenCentral()
 }
 
 dependencies {
-    // Use JUnit test framework.
-    testImplementation("junit:junit:4.13.2")
+    // jakarta servlet namespace
+//    implementation("org.eclipse.jetty:jetty-server:11.0.6")
+//    implementation("org.eclipse.jetty:jetty-servlet:11.0.6")
+//    implementation("jakarta.servlet:jakarta.servlet-api:5.0.0")
 
-    // This dependency is used by the application.
-    implementation("com.google.guava:guava:30.1.1-jre")
+    // javax servelet namespace
+    implementation("org.eclipse.jetty:jetty-server:10.0.6")
+    implementation("org.eclipse.jetty:jetty-servlet:10.0.6")
+    implementation("org.jboss.resteasy:resteasy-jaxrs:3.11.4.Final")
+    implementation("javax.servlet:javax.servlet-api:4.0.1")
+
+    implementation("org.jboss.resteasy:resteasy-jackson2-provider:4.7.1.Final")
+
+    implementation("com.google.flogger:flogger:0.6")
+    implementation("com.google.flogger:flogger-slf4j-backend:0.6")
+    implementation("ch.qos.logback:logback-classic:1.3.0-alpha10")
+    implementation("org.jboss.resteasy:resteasy-servlet-initializer:4.7.1.Final")
+
+    // Use JUnit test framework.
+    testImplementation("junit:junit:4.13")
 }
 
 application {
     // Define the main class for the application.
-    mainClass.set("com.jkurapati.grocery.App")
+    mainClass.set("com.jkurapati.grocery.api.App")
+}
+
+tasks {
+    named<ShadowJar>("shadowJar") {
+        archiveBaseName.set("shadow")
+        mergeServiceFiles()
+    }
 }
