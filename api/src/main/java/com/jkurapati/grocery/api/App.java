@@ -14,7 +14,7 @@ public class App {
 
     public static void main(String[] args) {
         try {
-            new JettyServer().startRestEasyServer();
+            new JettyServer().start();
         } catch (Exception e) {
             logger.at(SEVERE).withStackTrace(FULL).withCause(e).log("Error starting server");
         }

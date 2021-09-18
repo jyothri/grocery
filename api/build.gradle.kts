@@ -14,6 +14,8 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.0.0"
 
 }
+val resteasyVersion = project.property("ext.resteasyVersion")
+val guiceVersion = project.property("ext.guiceVersion")
 
 repositories {
     mavenCentral()
@@ -28,15 +30,18 @@ dependencies {
     // javax servelet namespace
     implementation("org.eclipse.jetty:jetty-server:10.0.6")
     implementation("org.eclipse.jetty:jetty-servlet:10.0.6")
-    implementation("org.jboss.resteasy:resteasy-jaxrs:3.11.4.Final")
+    implementation("org.jboss.resteasy:resteasy-jaxrs:$resteasyVersion")
     implementation("javax.servlet:javax.servlet-api:4.0.1")
 
-    implementation("org.jboss.resteasy:resteasy-jackson2-provider:4.7.1.Final")
+    implementation("org.jboss.resteasy:resteasy-jackson2-provider:$resteasyVersion")
 
+    implementation("ch.qos.logback:logback-classic:1.3.0-alpha10")
     implementation("com.google.flogger:flogger:0.6")
     implementation("com.google.flogger:flogger-slf4j-backend:0.6")
-    implementation("ch.qos.logback:logback-classic:1.3.0-alpha10")
-    implementation("org.jboss.resteasy:resteasy-servlet-initializer:4.7.1.Final")
+    implementation("com.google.inject:guice:$guiceVersion")
+    implementation("com.google.inject.extensions:guice-servlet:$guiceVersion")
+    implementation("org.jboss.resteasy:resteasy-guice:$resteasyVersion")
+    implementation("org.jboss.resteasy:resteasy-servlet-initializer:$resteasyVersion")
 
     // Use JUnit test framework.
     testImplementation("junit:junit:4.13")
