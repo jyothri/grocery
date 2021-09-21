@@ -44,6 +44,7 @@ dependencies {
     implementation("org.jboss.resteasy:resteasy-guice:$resteasyVersion")
     implementation("org.jboss.resteasy:resteasy-servlet-initializer:$resteasyVersion")
     implementation("org.projectlombok:lombok:1.18.20")
+    implementation("org.reflections:reflections:0.9.11")
     implementation("net.sf.jopt-simple:jopt-simple:5.0.4")
 
     // Use JUnit test framework.
