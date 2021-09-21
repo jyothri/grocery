@@ -1,6 +1,8 @@
 package com.jkurapati.grocery.api.server;
 
 import com.google.common.flogger.FluentLogger;
+import com.google.inject.Provider;
+import com.google.inject.name.Named;
 import com.google.inject.servlet.GuiceFilter;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
@@ -9,23 +11,26 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.jboss.resteasy.plugins.guice.GuiceResteasyBootstrapServletContextListener;
 import org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher;
 
+import javax.inject.Inject;
 import javax.servlet.DispatcherType;
-import java.util.Date;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.EnumSet;
 import java.util.logging.Level;
 
 import static org.eclipse.jetty.servlet.ServletContextHandler.SESSIONS;
 
-public class JettyServer {
+class JettyServerProvider implements Provider<Server> {
     private static final String APPLICATION_PATH = "/api";
     private static final String CONTEXT_ROOT = "/";
     private static final String PATH_ALL = "/*";
     private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+    private final Server server;
 
-    public void start() throws Exception {
-        final int port = 8080;
-        final Server server = new Server(port);
-
+    @Inject
+    public JettyServerProvider(@Named("port") int port, @Named("address") String address) throws Exception {
+        server = new Server(new InetSocketAddress(InetAddress.getByName(address), port));
+        logger.at(Level.INFO).log("Jetty server configured on port: %s address: %s", port, address);
         ServletContextHandler servletContextHandler = new ServletContextHandler(server, CONTEXT_ROOT, SESSIONS);
         configureRestEasy(servletContextHandler);
         servletContextHandler.addEventListener(new GuiceResteasyBootstrapServletContextListener());
@@ -34,11 +39,6 @@ public class JettyServer {
 
         // You MUST add DefaultServlet or your server will always return 404s
         servletContextHandler.addServlet(DefaultServlet.class, "/");
-
-        // Start the Server so it starts accepting connections from clients.
-        server.start();
-        logger.at(Level.INFO).log("Started server: %s", new Date());
-        server.join();
     }
 
     private void configureRestEasy(ServletContextHandler servletContextHandler) {
@@ -47,5 +47,10 @@ public class JettyServer {
         restEasyServlet.setInitParameter("resteasy.servlet.mapping.prefix",
                 APPLICATION_PATH);
         servletContextHandler.addServlet(restEasyServlet, APPLICATION_PATH + PATH_ALL);
+    }
+
+    @Override
+    public Server get() {
+        return server;
     }
 }

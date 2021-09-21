@@ -4,7 +4,11 @@
 package com.jkurapati.grocery.api;
 
 import com.google.common.flogger.FluentLogger;
-import com.jkurapati.grocery.api.server.JettyServer;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.jkurapati.grocery.api.server.ConfigModule;
+import com.jkurapati.grocery.api.server.JettyModule;
+import org.eclipse.jetty.server.Server;
 
 import static com.google.common.flogger.StackSize.FULL;
 import static java.util.logging.Level.SEVERE;
@@ -14,7 +18,10 @@ public class App {
 
     public static void main(String[] args) {
         try {
-            new JettyServer().start();
+            final Injector injector = Guice.createInjector(new ConfigModule(args), new JettyModule());
+            Server server = injector.getInstance(Server.class);
+            server.start();
+            server.join();
         } catch (Exception e) {
             logger.at(SEVERE).withStackTrace(FULL).withCause(e).log("Error starting server");
         }

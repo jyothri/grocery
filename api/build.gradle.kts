@@ -12,6 +12,7 @@ plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
     id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("io.freefair.lombok") version "6.2.0"
 
 }
 val resteasyVersion = project.property("ext.resteasyVersion")
@@ -27,7 +28,7 @@ dependencies {
 //    implementation("org.eclipse.jetty:jetty-servlet:11.0.6")
 //    implementation("jakarta.servlet:jakarta.servlet-api:5.0.0")
 
-    // javax servelet namespace
+    // javax servlet namespace
     implementation("org.eclipse.jetty:jetty-server:10.0.6")
     implementation("org.eclipse.jetty:jetty-servlet:10.0.6")
     implementation("org.jboss.resteasy:resteasy-jaxrs:$resteasyVersion")
@@ -42,6 +43,8 @@ dependencies {
     implementation("com.google.inject.extensions:guice-servlet:$guiceVersion")
     implementation("org.jboss.resteasy:resteasy-guice:$resteasyVersion")
     implementation("org.jboss.resteasy:resteasy-servlet-initializer:$resteasyVersion")
+    implementation("org.projectlombok:lombok:1.18.20")
+    implementation("net.sf.jopt-simple:jopt-simple:5.0.4")
 
     // Use JUnit test framework.
     testImplementation("junit:junit:4.13")

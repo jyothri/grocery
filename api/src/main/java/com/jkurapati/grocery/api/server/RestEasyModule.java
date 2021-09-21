@@ -1,12 +1,11 @@
 package com.jkurapati.grocery.api.server;
 
-import com.google.inject.Binder;
-import com.google.inject.Module;
+import com.google.inject.AbstractModule;
 import com.jkurapati.grocery.api.resource.VersionResource;
 
-public class RestEasyModule implements Module {
+public class RestEasyModule extends AbstractModule {
     @Override
-    public void configure(Binder binder) {
-        binder.bind(VersionResource.class);
+    public void configure() {
+        bind(VersionResource.class);
     }
 }
