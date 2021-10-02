@@ -15,26 +15,27 @@ plugins {
     id("io.freefair.lombok") version "6.2.0"
 
 }
-val resteasyVersion = project.property("ext.resteasyVersion")
 val guiceVersion = project.property("ext.guiceVersion")
+val jettyVersion: String = project.property("ext.jettyVersion") as String
+val resteasyVersion = project.property("ext.resteasyVersion")
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    // jakarta servlet namespace
-//    implementation("org.eclipse.jetty:jetty-server:11.0.6")
-//    implementation("org.eclipse.jetty:jetty-servlet:11.0.6")
-//    implementation("jakarta.servlet:jakarta.servlet-api:5.0.0")
-
-    // javax servlet namespace
-    implementation("org.eclipse.jetty:jetty-server:10.0.6")
-    implementation("org.eclipse.jetty:jetty-servlet:10.0.6")
-    implementation("org.jboss.resteasy:resteasy-jaxrs:$resteasyVersion")
-    implementation("javax.servlet:javax.servlet-api:4.0.1")
-
-    implementation("org.jboss.resteasy:resteasy-jackson2-provider:$resteasyVersion")
+    val majorVersion = jettyVersion.split(".").get(0).toInt()
+    if (majorVersion > 10) {
+        // jakarta servlet namespace
+        implementation("org.eclipse.jetty:jetty-server:$jettyVersion")
+        implementation("org.eclipse.jetty:jetty-servlet:$jettyVersion")
+        implementation("jakarta.servlet:jakarta.servlet-api:5.0.0")
+    } else {
+        // javax servlet namespace
+        implementation("org.eclipse.jetty:jetty-server:$jettyVersion")
+        implementation("org.eclipse.jetty:jetty-servlet:$jettyVersion")
+        implementation("javax.servlet:javax.servlet-api:4.0.1")
+    }
 
     implementation("ch.qos.logback:logback-classic:1.3.0-alpha10")
     implementation("com.google.flogger:flogger:0.6")
@@ -42,6 +43,8 @@ dependencies {
     implementation("com.google.inject:guice:$guiceVersion")
     implementation("com.google.inject.extensions:guice-servlet:$guiceVersion")
     implementation("org.jboss.resteasy:resteasy-guice:$resteasyVersion")
+    implementation("org.jboss.resteasy:resteasy-jackson2-provider:$resteasyVersion")
+    implementation("org.jboss.resteasy:resteasy-jaxrs:$resteasyVersion")
     implementation("org.jboss.resteasy:resteasy-servlet-initializer:$resteasyVersion")
     implementation("org.projectlombok:lombok:1.18.20")
     implementation("org.reflections:reflections:0.9.11")
